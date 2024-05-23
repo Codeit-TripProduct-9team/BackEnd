@@ -1,8 +1,11 @@
 package CodeIt.Ytrip.common;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Component
 public class JwtUtils {
     @Value("${JWT.SECRET.KEY}")
@@ -26,7 +30,7 @@ public class JwtUtils {
 
     private Map<String, Object> createClaims(String userId) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("key", userId);
+        claims.put("userId", userId);
         return claims;
     }
 
@@ -46,5 +50,22 @@ public class JwtUtils {
                 .verifyWith(createSigningKey())
                 .build()
                 .parseSignedClaims(token).getPayload();
+    }
+
+    public boolean isValidToken(String token) {
+
+        try {
+            getClaims(token);
+            return true;
+        } catch (ExpiredJwtException exception) {
+            log.error("token Expired");
+            return false;
+        } catch (JwtException exception) {
+            log.error("Token Tampered");
+            return false;
+        } catch (NullPointerException exception) {
+            log.error("Token is Null");
+            return false;
+        }
     }
 }
