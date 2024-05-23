@@ -53,7 +53,6 @@ public class JwtUtils {
     }
 
     public boolean isValidToken(String token) {
-
         try {
             getClaims(token);
             return true;
@@ -67,5 +66,9 @@ public class JwtUtils {
             log.error("Token is Null");
             return false;
         }
+    }
+
+    public String splitBearerToken(String bearerToken) {
+        return bearerToken.split(" ")[1];
     }
 }
