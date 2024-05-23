@@ -10,4 +10,5 @@ public class LocalLoginSuccessResponse {
     private Integer status;
     private String message;
     private String accessToken;
+    private String refreshToken;
 }

@@ -17,27 +17,27 @@ import java.util.Map;
 @Slf4j
 @Component
 public class JwtUtils {
+
     @Value("${JWT.SECRET.KEY}")
     private String key;
 
-    public String generateToken(String userId) {
+    public String generateToken(Long userId, int expireTime, String tokenName) {
         return Jwts.builder()
                 .claims(createClaims(userId))
-                .expiration(createExpireDate())
+                .expiration(createExpireDate(expireTime))
                 .signWith(createSigningKey())
                 .compact();
     }
 
-    private Map<String, Object> createClaims(String userId) {
+    private Map<String, Object> createClaims(Long userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
         return claims;
     }
 
-    private Date createExpireDate() {
-        long expireTimeMils = 1000 * 60 * 60;
+    private static Date createExpireDate(long expireTime) {
         long curTime = System.currentTimeMillis();
-        return new Date(curTime + expireTimeMils);
+        return new Date(curTime + expireTime);
     }
 
     private SecretKey createSigningKey() {

@@ -8,6 +8,7 @@ import CodeIt.Ytrip.auth.dto.response.KakaoLoginResponse;
 import CodeIt.Ytrip.auth.dto.response.LocalLoginSuccessResponse;
 import CodeIt.Ytrip.auth.dto.response.RegisterResponse;
 import CodeIt.Ytrip.common.ErrorResponse;
+import CodeIt.Ytrip.common.JwtUtils;
 import CodeIt.Ytrip.common.ResponseStatus;
 import CodeIt.Ytrip.user.domain.User;
 import CodeIt.Ytrip.user.repository.UserRepository;
@@ -34,6 +35,7 @@ public class AuthService {
     private String redirectUri;
     @Value("${KAKAO.REST.API.KEY}")
     private String restAPiKey;
+    private final JwtUtils jwtUtils;
 
     private final UserRepository userRepository;
 
@@ -153,8 +155,13 @@ public class AuthService {
     }
 
     public Object localLogin(LocalLoginRequest localLoginRequest) {
-        if (userRepository.existsByEmailAndPassword(localLoginRequest.getEmail(), localLoginRequest.getPassword())) {
-            return new LocalLoginSuccessResponse(ResponseStatus.SUCCESS.getStatus(), ResponseStatus.SUCCESS.getMessage(), "accessToken");
+        Optional<User> findUser = userRepository.findByEmailAndPassword(localLoginRequest.getEmail(), localLoginRequest.getPassword());
+        if (findUser.isPresent()) {
+            String accessToken = jwtUtils.generateToken(findUser.get().getId(), 1000 * 60 * 60, "AccessToken");
+            String refreshToken = jwtUtils.generateToken(findUser.get().getId(), 1000 * 60 * 60 * 24, "RefreshToken");
+            findUser.get().updateRefreshToken(refreshToken);
+            userRepository.save(findUser.get());
+            return new LocalLoginSuccessResponse(ResponseStatus.SUCCESS.getStatus(), ResponseStatus.SUCCESS.getMessage(), accessToken, refreshToken);
         } else {
             return new ErrorResponse(ResponseStatus.NOT_EXIST_USER.getStatus(), ResponseStatus.NOT_EXIST_USER.getMessage());
         }
