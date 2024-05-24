@@ -1,6 +1,5 @@
 package CodeIt.Ytrip.config;
 
-import CodeIt.Ytrip.common.JwtUtils;
 import CodeIt.Ytrip.common.interceptor.JwtInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/api/auth/register");
+                .excludePathPatterns("/api/auth/register", "/api/auth/login", "/api/auth/reissue");
     }
 }
 
