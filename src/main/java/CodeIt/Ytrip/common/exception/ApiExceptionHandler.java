@@ -26,5 +26,11 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse.of(e.getStatus(), e.getMessage()));
     }
 
+    @ExceptionHandler(TokenException.class)
+    public ResponseEntity<?> TokenExceptionHandler(TokenException e) {
+        log.error("Token Exception = {}, {}", e.getMessage(), e.getStatus());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.of(e.getStatus(), e.getMessage()));
+    }
+
 
 }
