@@ -2,11 +2,9 @@ package CodeIt.Ytrip.auth.controller;
 
 import CodeIt.Ytrip.auth.dto.request.LocalLoginRequest;
 import CodeIt.Ytrip.auth.dto.request.RegisterRequest;
-import CodeIt.Ytrip.auth.dto.response.KakaoLoginResponse;
 import CodeIt.Ytrip.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,19 +29,19 @@ public class AuthController {
     }
 
     @PostMapping("/duplicate/email")
-    public Object checkEmailDuplicate(@RequestBody Map<String, String> request) {
+    public ResponseEntity<?> checkEmailDuplicate(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         log.info("email = {}", email);
         return authService.checkEmailDuplicate(email);
     }
 
     @PostMapping("/login")
-    public Object localLogin(@RequestBody LocalLoginRequest localLoginRequest) {
+    public ResponseEntity<?> localLogin(@RequestBody LocalLoginRequest localLoginRequest) {
         return authService.localLogin(localLoginRequest);
     }
 
     @PatchMapping("/reissue")
-    public Object reissue(@RequestBody Map<String, String> body) {
+    public ResponseEntity<?> reissue(@RequestBody Map<String, String> body) {
         String refreshToken = body.get("refresh_token");
         return authService.reissue(refreshToken);
     }
