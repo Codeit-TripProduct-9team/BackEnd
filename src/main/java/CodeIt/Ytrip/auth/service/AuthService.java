@@ -6,7 +6,7 @@ import CodeIt.Ytrip.auth.dto.KakaoUserInfoDto;
 import CodeIt.Ytrip.auth.dto.request.LocalLoginRequest;
 import CodeIt.Ytrip.auth.dto.request.RegisterRequest;
 import CodeIt.Ytrip.common.exception.RuntimeException;
-import CodeIt.Ytrip.common.exception.StatusCode;
+import CodeIt.Ytrip.common.reponse.StatusCode;
 import CodeIt.Ytrip.common.exception.UserException;
 import CodeIt.Ytrip.common.JwtUtils;
 import CodeIt.Ytrip.common.reponse.SuccessResponse;
