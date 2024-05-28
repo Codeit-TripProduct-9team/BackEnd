@@ -1,4 +1,4 @@
-package CodeIt.Ytrip.review.sevice;
+package CodeIt.Ytrip.review;
 
 import CodeIt.Ytrip.review.domain.Review;
 import CodeIt.Ytrip.user.domain.User;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-class ReviewServiceTest {
+class ReviewTest {
 
     @PersistenceContext
     private EntityManager em;
@@ -22,10 +22,10 @@ class ReviewServiceTest {
 
         // given
         User user = new User();
-        user.createUser("테스터","test@test.com","1234",null);
+        user.createUser("테스터", "test@test.com", "1234", null);
         em.persist(user);
 
-        Video video = new Video("Test Video Title", "Test Video Content", "url", 10, "Test Video Tag");
+        Video video = Video.of("Test Video Title", "Test Video Content", "url", 10, "Test Video Tag");
         em.persist(video);
 
         Review review = new Review(user, video, "Test Review Content");
@@ -37,6 +37,4 @@ class ReviewServiceTest {
         //then
         Assertions.assertThat(findReview).isEqualTo(review);
     }
-
-
 }

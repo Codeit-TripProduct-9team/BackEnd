@@ -25,7 +25,7 @@ class JwtUtilsTest {
     public void 토큰_복호화() {
         String token = jwtUtils.generateToken("test", 1000 * 60 * 60, "AccessToken");
         Claims claims = jwtUtils.getClaims(token);
-        assertThat(claims.get("userId")).isEqualTo(10);
+        assertThat(claims.get("email")).isEqualTo("test");
     }
 
 }
