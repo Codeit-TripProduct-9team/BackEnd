@@ -8,19 +8,22 @@ import lombok.Getter;
 @Data
 @Getter
 @Builder
-public class VideoDto {
-
+public class VideoInfoDto {
     private Long id;
     private String title;
+    private String content;
     private String url;
     private String tag;
+    private Integer likeCount;
 
-    public static VideoDto from(Video video) {
-        return VideoDto.builder()
+    public static VideoInfoDto from(Video video) {
+        return VideoInfoDto.builder()
                 .id(video.getId())
                 .title(video.getTitle())
+                .content(video.getContent())
                 .url(video.getUrl())
                 .tag(video.getTag())
+                .likeCount(video.getLikeCount())
                 .build();
     }
 }
