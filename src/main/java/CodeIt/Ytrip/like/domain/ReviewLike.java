@@ -3,9 +3,12 @@ package CodeIt.Ytrip.like.domain;
 import CodeIt.Ytrip.review.domain.Review;
 import CodeIt.Ytrip.user.domain.User;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Getter
 public class ReviewLike {
     @Id

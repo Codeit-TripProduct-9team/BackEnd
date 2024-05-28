@@ -3,6 +3,8 @@ package CodeIt.Ytrip.video.domain;
 import CodeIt.Ytrip.like.domain.VideoLike;
 import CodeIt.Ytrip.review.domain.Review;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +13,9 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
+@Builder
 public class Video {
 
     @Id @GeneratedValue
@@ -33,11 +37,13 @@ public class Video {
     @OneToMany(mappedBy = "video")
     private List<VideoLike>  videoLikes = new ArrayList<>();
 
-    public Video(String title, String content, String url, Integer likeCount, String tag) {
-        this.title = title;
-        this.content = content;
-        this.url = url;
-        this.likeCount = likeCount;
-        this.tag = tag;
+    public static Video of(String title, String content, String url, Integer likeCount, String tag) {
+       return Video.builder()
+               .title(title)
+               .content(content)
+               .url(url)
+               .likeCount(likeCount)
+               .tag(tag)
+               .build();
     }
 }

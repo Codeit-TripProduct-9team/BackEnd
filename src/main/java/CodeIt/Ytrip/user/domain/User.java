@@ -5,6 +5,8 @@ import CodeIt.Ytrip.like.domain.VideoLike;
 import CodeIt.Ytrip.review.domain.Review;
 import CodeIt.Ytrip.common.domain.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +15,8 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 public class User extends BaseEntity {
 

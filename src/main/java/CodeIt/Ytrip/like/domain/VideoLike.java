@@ -3,9 +3,12 @@ package CodeIt.Ytrip.like.domain;
 import CodeIt.Ytrip.user.domain.User;
 import CodeIt.Ytrip.video.domain.Video;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Getter
 public class VideoLike {
 

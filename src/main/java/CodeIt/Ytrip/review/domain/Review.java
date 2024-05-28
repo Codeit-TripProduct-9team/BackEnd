@@ -4,15 +4,16 @@ import CodeIt.Ytrip.like.domain.ReviewLike;
 import CodeIt.Ytrip.user.domain.User;
 import CodeIt.Ytrip.video.domain.Video;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
+@Builder
 public class Review {
 
     @Id @GeneratedValue
@@ -32,6 +33,13 @@ public class Review {
 
     private String content;
 
+    public Review of(User user, Video video, String content) {
+        return Review.builder()
+                .user(user)
+                .video(video)
+                .content(content)
+                .build();
+    }
     public Review(User user, Video video, String content) {
         this.user = user;
         this.video = video;
