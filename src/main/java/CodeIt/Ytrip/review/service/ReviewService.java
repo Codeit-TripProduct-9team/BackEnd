@@ -43,6 +43,10 @@ public class ReviewService {
             reviews = reviewRepository.findByVideoIdOrderByCreatedAtDesc(videoId, pageable);
         }
 
+        if (reviews == null) {
+            throw new NoSuchElementException(StatusCode.REVIEW_NOT_FOUND);
+        }
+
         Page<ReviewDto> reviewDtoPage = reviews.map(ReviewDto::from);
         BasePageDto basePageDto = BasePageDto.from(reviewDtoPage);
 
