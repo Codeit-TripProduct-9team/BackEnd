@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,13 +26,24 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
 
-    public ResponseEntity<?> getReviewList(Long videoId) {
-//        try {
-        List<Review> findReview = reviewRepository.findByVideoId(videoId);
-        List<ReviewDto> reviewDto = findReview.stream()
+    public ResponseEntity<?> getReviewList(Long videoId, String sort) {
+        List<Review> reviews = new ArrayList<>();
+
+        try {
+            if (sort.equals("likes")) {
+                reviews = reviewRepository.findByVideoIdOrderByLikeCountDesc(videoId);
+            }
+
+            if (sort.equals("latest")) {
+                reviews = reviewRepository.findByVideoIdOrderByCreatedAtDesc(videoId);
+            }
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+        List<ReviewDto> reviewDto = reviews.stream()
                 .map(ReviewDto::from)
                 .toList();
+
         return ResponseEntity.ok(SuccessResponse.of(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), reviewDto));
-//        }
     }
 }
