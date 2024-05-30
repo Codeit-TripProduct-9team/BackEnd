@@ -32,7 +32,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
 
     public ResponseEntity<?> getReviewList(Long videoId, String sort, int page) {
-        Pageable pageable= PageRequest.of(page, 2);
+        Pageable pageable= PageRequest.of(page, 10);
         Page<Review> reviews = null;
 
         if (sort.equals("likes")) {
@@ -43,7 +43,8 @@ public class ReviewService {
             reviews = reviewRepository.findByVideoIdOrderByCreatedAtDesc(videoId, pageable);
         }
 
-        if (reviews == null) {
+        if (reviews == null || reviews.isEmpty()) {
+            System.out.println("reviews is null or empty");
             throw new NoSuchElementException(StatusCode.REVIEW_NOT_FOUND);
         }
 
