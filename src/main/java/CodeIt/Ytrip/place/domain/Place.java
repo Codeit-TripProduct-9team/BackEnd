@@ -17,6 +17,6 @@ public class Place {
     @Column(name = "place_id")
     private Long id;
     private String name;
-    private double posX;
-    private double posY;
+    private float posX;
+    private float posY;
 }

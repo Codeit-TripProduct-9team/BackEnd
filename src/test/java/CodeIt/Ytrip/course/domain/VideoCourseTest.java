@@ -39,7 +39,6 @@ class VideoCourseTest {
         videoRepository.save(video);
 
         VideoCourse videoCourse = VideoCourse.builder()
-                .dayNum(1)
                 .places("1,2")
                 .video(video)
                 .build();

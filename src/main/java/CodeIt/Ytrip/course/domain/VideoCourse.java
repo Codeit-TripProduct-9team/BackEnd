@@ -19,6 +19,5 @@ public class VideoCourse {
     @JoinColumn(name = "video_id")
     private Video video;
 
-    private int dayNum;
     private String places;
 }

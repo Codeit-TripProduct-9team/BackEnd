@@ -21,6 +21,5 @@ public class UserCourse {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private int dayNum;
     private String places;
 }

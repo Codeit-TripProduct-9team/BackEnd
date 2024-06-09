@@ -1,7 +1,12 @@
 package CodeIt.Ytrip.course.repository;
 
-import CodeIt.Ytrip.course.domain.Course;
+import CodeIt.Ytrip.course.domain.VideoCourse;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CourseRepository extends JpaRepository<Course, Long> {
+import java.util.List;
+import java.util.Optional;
+
+public interface CourseRepository extends JpaRepository<VideoCourse, Long> {
+
+    Optional<VideoCourse> findByVideoId(Long videoId);
 }
