@@ -1,6 +1,6 @@
 package CodeIt.Ytrip.video.domain;
 
-import CodeIt.Ytrip.course.domain.Course;
+import CodeIt.Ytrip.course.domain.VideoCourse;
 import CodeIt.Ytrip.like.domain.VideoLike;
 import CodeIt.Ytrip.review.domain.Review;
 import jakarta.persistence.*;
@@ -38,7 +38,7 @@ public class Video {
     private List<VideoLike>  videoLikes = new ArrayList<>();
 
     @OneToMany(mappedBy = "video")
-    private List<Course> courses = new ArrayList<>();
+    private List<VideoCourse> cours = new ArrayList<>();
 
     public static Video of(String title, String content, String url, Integer likeCount, String tag) {
        return Video.builder()

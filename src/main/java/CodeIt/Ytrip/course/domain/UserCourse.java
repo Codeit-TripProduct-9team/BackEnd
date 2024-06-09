@@ -1,26 +1,25 @@
 package CodeIt.Ytrip.course.domain;
 
+import CodeIt.Ytrip.user.domain.User;
 import CodeIt.Ytrip.video.domain.Video;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Course {
+public class UserCourse {
 
-    @Id @GeneratedValue
-    @Column(name = "course_id")
+    @Id
+    @GeneratedValue
+    @Column(name = "user_course_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "video_id")
-    private Video video;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private int dayNum;
     private String places;

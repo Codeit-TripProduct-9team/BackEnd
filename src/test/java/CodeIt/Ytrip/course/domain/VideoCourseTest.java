@@ -1,7 +1,6 @@
 package CodeIt.Ytrip.course.domain;
 
 import CodeIt.Ytrip.course.repository.CourseRepository;
-import CodeIt.Ytrip.place.domain.Place;
 import CodeIt.Ytrip.place.repository.PlaceRepository;
 import CodeIt.Ytrip.video.domain.Video;
 import CodeIt.Ytrip.video.repository.VideoRepository;
@@ -11,16 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class CourseTest {
+class VideoCourseTest {
 
     @Autowired
     private VideoRepository videoRepository;
@@ -44,16 +38,16 @@ class CourseTest {
 
         videoRepository.save(video);
 
-        Course course = Course.builder()
+        VideoCourse videoCourse = VideoCourse.builder()
                 .dayNum(1)
                 .places("1,2")
                 .video(video)
                 .build();
         //when
-        courseRepository.save(course);
+        courseRepository.save(videoCourse);
 
         //then
-        Optional<Course> findCourse = courseRepository.findById(course.getId());
+        Optional<VideoCourse> findCourse = courseRepository.findById(videoCourse.getId());
         Assertions.assertThat(findCourse.get().getPlaces()).isEqualTo("1,2");
     }
 
@@ -71,7 +65,7 @@ class CourseTest {
 //
 //        videoRepository.save(video);
 //
-//        Course course = Course.builder()
+//        VideoCourse course = VideoCourse.builder()
 //                .dayNum(1)
 //                .places("1,2")
 //                .video(video)
@@ -94,7 +88,7 @@ class CourseTest {
 //        placeRepository.save(place2);
 //
 //        //then
-//        Optional<Course> findCourse = courseRepository.findById(course.getId());
+//        Optional<VideoCourse> findCourse = courseRepository.findById(course.getId());
 //
 //        List<String> placeStrings = List.of(findCourse.get().getPlaces().split(","));
 //
