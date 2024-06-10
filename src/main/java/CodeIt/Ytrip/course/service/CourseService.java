@@ -1,6 +1,7 @@
 package CodeIt.Ytrip.course.service;
 
 import CodeIt.Ytrip.common.exception.NoSuchElementException;
+import CodeIt.Ytrip.common.exception.RuntimeException;
 import CodeIt.Ytrip.common.exception.UserException;
 import CodeIt.Ytrip.common.reponse.StatusCode;
 import CodeIt.Ytrip.common.reponse.SuccessResponse;
@@ -36,37 +37,49 @@ public class CourseService {
     private final PlaceRepository placeRepository;
 
     public ResponseEntity<?> postUserCourse(PostCourseRequest postCourseRequest) {
-        Long userId = postCourseRequest.getUserId();
-        System.out.println("userId = " + userId);
-        Optional<User> findUser = userRepository.findById(userId);
-        findUser.orElseThrow(() -> new UserException(StatusCode.USER_NOT_FOUND));
-        System.out.println("findUser.get() = " + findUser.get());
-        List<CourseDto> courses = postCourseRequest.getCourse();
-        String places= courses.stream().map(c -> {
-            String name = c.getName();
-            float posX = c.getPosX();
-            float posY = c.getPosY();
-            Optional<Place> findPlace = placeRepository.findByPosXAndPosY(posX, posY);
-            if (findPlace.isEmpty()) {
-                Place place = Place.builder()
-                        .name(name)
-                        .posX(posX)
-                        .posY(posY)
-                        .build();
-                placeRepository.save(place);
-                return String.valueOf(place.getId());
-            }
-            return String.valueOf(findPlace.get().getId());
-        }).collect(Collectors.joining(","));
+        Optional<User> findUser = userRepository.findById(postCourseRequest.getUserId());
+        User user = findUser.orElseThrow(() -> new UserException(StatusCode.USER_NOT_FOUND));
 
-        UserCourse userCourse = UserCourse.builder()
-                .user(findUser.get())
-                .places(places)
-                .build();
-        userCourseRepository.save(userCourse);
+        List<CourseDto> courses = postCourseRequest.getCourse();
+        String places = generatePlacesString(courses);
+
+        saveUserCourse(user, places);
 
         return ResponseEntity.ok(SuccessResponse.of(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage()));
     }
+
+    private String generatePlacesString(List<CourseDto> courses) {
+        return courses.stream().map(this::getPlaceId).collect(Collectors.joining(","));
+    }
+
+    private String getPlaceId(CourseDto course) {
+        float posX = course.getPosX();
+        float posY = course.getPosY();
+        Optional<Place> findPlace = placeRepository.findByPosXAndPosY(posX, posY);
+        if (findPlace.isEmpty()) {
+            Place place = Place.builder()
+                    .name(course.getName())
+                    .posX(posX)
+                    .posY(posY)
+                    .build();
+            placeRepository.save(place);
+            return String.valueOf(place.getId());
+        }
+        return String.valueOf(findPlace.get().getId());
+    }
+
+    private void saveUserCourse(User user, String places) {
+        try {
+            UserCourse userCourse = UserCourse.builder()
+                    .user(user)
+                    .places(places)
+                    .build();
+            userCourseRepository.save(userCourse);
+        } catch (Exception e) {
+            throw new RuntimeException(StatusCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     public ResponseEntity<?> getVideoCourse(Long videoId) {
         Optional<VideoCourse> findVideoCourse = videoCourseRepository.findByVideoId(videoId);
