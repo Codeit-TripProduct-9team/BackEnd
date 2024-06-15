@@ -13,7 +13,8 @@ import java.util.List;
 @Builder
 public class PostCourseRequest {
 
-    private List<CourseDto> course;
+    private String name;
+    private List<PlanDto> plan;
 
 
 //    public static PostCourseRequest of (Long userId, List<CourseDto> courseDto) {

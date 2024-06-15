@@ -9,6 +9,8 @@ import lombok.Data;
 public class CourseDto {
     private int index;
     private String name;
+    private String description;
+    private String img;
     private float posX;
     private float posY;
 
@@ -16,6 +18,8 @@ public class CourseDto {
         return CourseDto.builder()
                 .index(index)
                 .name(place.getName())
+                .description(place.getDescription())
+                .img(place.getImg())
                 .posX(place.getPosX())
                 .posY(place.getPosY())
                 .build();

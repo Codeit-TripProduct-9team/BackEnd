@@ -5,6 +5,9 @@ import CodeIt.Ytrip.video.domain.Video;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,5 +24,9 @@ public class UserCourse {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(mappedBy = "userCourse")
+    private List<CourseDetail> courseDetails = new ArrayList<>();
+
     private String places;
+    private String name;
 }

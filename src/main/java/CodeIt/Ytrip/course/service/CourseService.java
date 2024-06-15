@@ -9,6 +9,7 @@ import CodeIt.Ytrip.course.domain.UserCourse;
 import CodeIt.Ytrip.course.domain.VideoCourse;
 import CodeIt.Ytrip.course.dto.CourseDto;
 import CodeIt.Ytrip.course.dto.CourseResponse;
+import CodeIt.Ytrip.course.dto.PlanDto;
 import CodeIt.Ytrip.course.dto.PostCourseRequest;
 import CodeIt.Ytrip.course.repository.UserCourseRepository;
 import CodeIt.Ytrip.course.repository.VideoCourseRepository;
@@ -40,10 +41,17 @@ public class CourseService {
         Optional<User> findUser = userRepository.findByEmail(email);
         User user = findUser.orElseThrow(() -> new UserException(StatusCode.USER_NOT_FOUND));
 
-        List<CourseDto> courses = postCourseRequest.getCourse();
-        String places = generatePlacesString(courses);
+        String courseName = postCourseRequest.getName();
+        List<PlanDto> courses = postCourseRequest.getPlan();
+        courses.stream().map(course -> {
+            int day = course.getDay();
+            List<CourseDto> places = course.getPlace();
+            String placesString = generatePlacesString(places);
+            saveUserCourse(user, placesString, courseName);
+            return places;
+        }).collect(Collectors.toList());
 
-        saveUserCourse(user, places);
+//        saveUserCourse(user, places);
 
         return ResponseEntity.ok(SuccessResponse.of(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage()));
     }
@@ -61,6 +69,8 @@ public class CourseService {
                     .name(course.getName())
                     .posX(posX)
                     .posY(posY)
+                    .img(course.getImg())
+                    .description(course.getDescription())
                     .build();
             placeRepository.save(place);
             return String.valueOf(place.getId());
@@ -68,11 +78,12 @@ public class CourseService {
         return String.valueOf(findPlace.get().getId());
     }
 
-    private void saveUserCourse(User user, String places) {
+    private void saveUserCourse(User user, String places, String courseName) {
         try {
             UserCourse userCourse = UserCourse.builder()
                     .user(user)
                     .places(places)
+                    .name(courseName)
                     .build();
             userCourseRepository.save(userCourse);
         } catch (Exception e) {
