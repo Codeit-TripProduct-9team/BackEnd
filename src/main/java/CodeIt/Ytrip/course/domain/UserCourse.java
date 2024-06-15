@@ -1,5 +1,6 @@
 package CodeIt.Ytrip.course.domain;
 
+import CodeIt.Ytrip.common.domain.BaseEntity;
 import CodeIt.Ytrip.user.domain.User;
 import CodeIt.Ytrip.video.domain.Video;
 import jakarta.persistence.*;
@@ -13,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class UserCourse {
+public class UserCourse extends BaseEntity {
 
     @Id
     @GeneratedValue
