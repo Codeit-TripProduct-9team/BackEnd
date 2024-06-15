@@ -27,6 +27,5 @@ public class UserCourse {
     @OneToMany(mappedBy = "userCourse")
     private List<CourseDetail> courseDetails = new ArrayList<>();
 
-    private String places;
     private String name;
 }

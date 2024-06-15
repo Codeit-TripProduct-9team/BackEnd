@@ -5,12 +5,14 @@ import CodeIt.Ytrip.common.exception.RuntimeException;
 import CodeIt.Ytrip.common.exception.UserException;
 import CodeIt.Ytrip.common.reponse.StatusCode;
 import CodeIt.Ytrip.common.reponse.SuccessResponse;
+import CodeIt.Ytrip.course.domain.CourseDetail;
 import CodeIt.Ytrip.course.domain.UserCourse;
 import CodeIt.Ytrip.course.domain.VideoCourse;
 import CodeIt.Ytrip.course.dto.CourseDto;
 import CodeIt.Ytrip.course.dto.CourseResponse;
 import CodeIt.Ytrip.course.dto.PlanDto;
 import CodeIt.Ytrip.course.dto.PostCourseRequest;
+import CodeIt.Ytrip.course.repository.CourseDetailRepository;
 import CodeIt.Ytrip.course.repository.UserCourseRepository;
 import CodeIt.Ytrip.course.repository.VideoCourseRepository;
 import CodeIt.Ytrip.place.domain.Place;
@@ -36,22 +38,27 @@ public class CourseService {
     private final VideoCourseRepository videoCourseRepository;
     private final UserRepository userRepository;
     private final PlaceRepository placeRepository;
+    private final CourseDetailRepository courseDetailRepository;
 
     public ResponseEntity<?> postUserCourse(PostCourseRequest postCourseRequest, String email) {
         Optional<User> findUser = userRepository.findByEmail(email);
         User user = findUser.orElseThrow(() -> new UserException(StatusCode.USER_NOT_FOUND));
 
         String courseName = postCourseRequest.getName();
+        UserCourse userCourse = saveUserCourse(user, courseName);
+
         List<PlanDto> courses = postCourseRequest.getPlan();
-        courses.stream().map(course -> {
+        courses.forEach(course -> {
             int day = course.getDay();
             List<CourseDto> places = course.getPlace();
             String placesString = generatePlacesString(places);
-            saveUserCourse(user, placesString, courseName);
-            return places;
-        }).collect(Collectors.toList());
-
-//        saveUserCourse(user, places);
+            CourseDetail courseDetail = CourseDetail.builder()
+                    .places(placesString)
+                    .userCourse(userCourse)
+                    .dayNum(day)
+                    .build();
+            courseDetailRepository.save(courseDetail);
+        });
 
         return ResponseEntity.ok(SuccessResponse.of(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage()));
     }
@@ -78,14 +85,13 @@ public class CourseService {
         return String.valueOf(findPlace.get().getId());
     }
 
-    private void saveUserCourse(User user, String places, String courseName) {
+    private UserCourse saveUserCourse(User user, String courseName) {
         try {
             UserCourse userCourse = UserCourse.builder()
                     .user(user)
-                    .places(places)
                     .name(courseName)
                     .build();
-            userCourseRepository.save(userCourse);
+            return userCourseRepository.save(userCourse);
         } catch (Exception e) {
             throw new RuntimeException(StatusCode.INTERNAL_SERVER_ERROR);
         }
