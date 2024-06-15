@@ -1,19 +1,19 @@
-//package CodeIt.Ytrip.common.interceptor;
-//
-//import CodeIt.Ytrip.common.JwtUtils;
-//import CodeIt.Ytrip.common.reponse.StatusCode;
-//import CodeIt.Ytrip.common.exception.UserException;
-//import jakarta.servlet.http.HttpServletRequest;
-//import jakarta.servlet.http.HttpServletResponse;
-//import lombok.RequiredArgsConstructor;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.stereotype.Component;
-//import org.springframework.web.servlet.HandlerInterceptor;
-//
-//@Slf4j
-//@RequiredArgsConstructor
-//@Component
-//public class JwtInterceptor implements HandlerInterceptor {
+package CodeIt.Ytrip.common.interceptor;
+
+import CodeIt.Ytrip.common.JwtUtils;
+import CodeIt.Ytrip.common.reponse.StatusCode;
+import CodeIt.Ytrip.common.exception.UserException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+@Slf4j
+@RequiredArgsConstructor
+@Component
+public class JwtInterceptor implements HandlerInterceptor {
 //
 //    private final JwtUtils jwtUtils;
 //
@@ -27,4 +27,4 @@
 //        }
 //        throw new UserException(StatusCode.LOGIN_REQUIRED);
 //    }
-//}
+}
