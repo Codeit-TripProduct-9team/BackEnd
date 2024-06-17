@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -30,6 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserService {
 
@@ -39,6 +41,7 @@ public class UserService {
     private final UserCourseRepository userCourseRepository;
     private final VideoLikeRepository videoLikeRepository;
 
+    @Transactional(readOnly = true)
     public ResponseEntity<?> findUserCourse(Long userId) {
         userRepository.findById(userId).orElseThrow(
                 () -> new UserException(StatusCode.USER_NOT_FOUND)
@@ -77,11 +80,17 @@ public class UserService {
         return PlanDto.of(courseDetail.getDayNum(), placeDto);
     }
 
+    @Transactional(readOnly = true)
     public ResponseEntity<?> getUserLikeVideo(Long userId) {
         List<Long> videoLikes = videoLikeRepository.findByUserId(userId).stream().map(VideoLike::getId).toList();
         List<Video> findVideos = videoRepository.findByIdIn(videoLikes);
         List<VideoListDto> videoList = findVideos.stream().map(VideoListDto::from).toList();
         System.out.println("videoList = " + videoList);
         return ResponseEntity.ok(SuccessResponse.of(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), videoList));
+    }
+
+    public ResponseEntity<?> deleteUserLikeVideo(Long userId, Long videoId) {
+        videoLikeRepository.deleteByUserIdAndVideoId(userId, videoId);
+        return ResponseEntity.ok(SuccessResponse.of(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage()));
     }
 }
