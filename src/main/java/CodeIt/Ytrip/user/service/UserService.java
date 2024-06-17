@@ -1,6 +1,5 @@
 package CodeIt.Ytrip.user.service;
 
-import CodeIt.Ytrip.common.exception.NoSuchElementException;
 import CodeIt.Ytrip.common.exception.UserException;
 import CodeIt.Ytrip.common.reponse.StatusCode;
 import CodeIt.Ytrip.common.reponse.SuccessResponse;
@@ -8,14 +7,17 @@ import CodeIt.Ytrip.course.domain.CourseDetail;
 import CodeIt.Ytrip.course.domain.UserCourse;
 import CodeIt.Ytrip.course.dto.CourseDto;
 import CodeIt.Ytrip.course.dto.PlanDto;
+import CodeIt.Ytrip.like.domain.VideoLike;
+import CodeIt.Ytrip.like.repository.VideoLikeRepository;
 import CodeIt.Ytrip.place.dto.PlaceDto;
-import CodeIt.Ytrip.course.repository.CourseDetailRepository;
 import CodeIt.Ytrip.course.repository.UserCourseRepository;
 import CodeIt.Ytrip.place.domain.Place;
 import CodeIt.Ytrip.place.repository.PlaceRepository;
-import CodeIt.Ytrip.user.domain.User;
 import CodeIt.Ytrip.user.dto.UserCourseResponse;
 import CodeIt.Ytrip.user.repository.UserRepository;
+import CodeIt.Ytrip.video.domain.Video;
+import CodeIt.Ytrip.video.dto.VideoListDto;
+import CodeIt.Ytrip.video.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,6 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -34,7 +35,9 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PlaceRepository placeRepository;
+    private final VideoRepository videoRepository;
     private final UserCourseRepository userCourseRepository;
+    private final VideoLikeRepository videoLikeRepository;
 
     public ResponseEntity<?> findUserCourse(Long userId) {
         userRepository.findById(userId).orElseThrow(
@@ -72,5 +75,13 @@ public class UserService {
                 .toList();
 
         return PlanDto.of(courseDetail.getDayNum(), placeDto);
+    }
+
+    public ResponseEntity<?> getUserLikeVideo(Long userId) {
+        List<Long> videoLikes = videoLikeRepository.findByUserId(userId).stream().map(VideoLike::getId).toList();
+        List<Video> findVideos = videoRepository.findByIdIn(videoLikes);
+        List<VideoListDto> videoList = findVideos.stream().map(VideoListDto::from).toList();
+        System.out.println("videoList = " + videoList);
+        return ResponseEntity.ok(SuccessResponse.of(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage(), videoList));
     }
 }
