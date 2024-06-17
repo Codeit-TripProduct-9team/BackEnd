@@ -11,7 +11,7 @@ import CodeIt.Ytrip.course.domain.VideoCourse;
 import CodeIt.Ytrip.place.dto.PlaceDto;
 import CodeIt.Ytrip.course.dto.CourseResponse;
 import CodeIt.Ytrip.course.dto.PlanDto;
-import CodeIt.Ytrip.course.dto.CourseDto;
+import CodeIt.Ytrip.course.dto.CourseListDto;
 import CodeIt.Ytrip.course.repository.CourseDetailRepository;
 import CodeIt.Ytrip.course.repository.UserCourseRepository;
 import CodeIt.Ytrip.course.repository.VideoCourseRepository;
@@ -40,14 +40,14 @@ public class CourseService {
     private final PlaceRepository placeRepository;
     private final CourseDetailRepository courseDetailRepository;
 
-    public ResponseEntity<?> postUserCourse(CourseDto courseDto, String email) {
+    public ResponseEntity<?> postUserCourse(CourseListDto courseListDto, String email) {
         Optional<User> findUser = userRepository.findByEmail(email);
         User user = findUser.orElseThrow(() -> new UserException(StatusCode.USER_NOT_FOUND));
 
-        String courseName = courseDto.getName();
+        String courseName = courseListDto.getName();
         UserCourse userCourse = saveUserCourse(user, courseName);
 
-        List<PlanDto> courses = courseDto.getPlan();
+        List<PlanDto> courses = courseListDto.getPlan();
         courses.forEach(course -> {
             int day = course.getDay();
             List<PlaceDto> places = course.getPlace();

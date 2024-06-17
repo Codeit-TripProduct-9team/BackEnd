@@ -6,8 +6,8 @@ import CodeIt.Ytrip.common.reponse.SuccessResponse;
 import CodeIt.Ytrip.course.domain.CourseDetail;
 import CodeIt.Ytrip.course.domain.UserCourse;
 import CodeIt.Ytrip.course.dto.CourseDto;
+import CodeIt.Ytrip.course.dto.CourseListDto;
 import CodeIt.Ytrip.course.dto.PlanDto;
-import CodeIt.Ytrip.like.domain.VideoLike;
 import CodeIt.Ytrip.like.repository.VideoLikeRepository;
 import CodeIt.Ytrip.place.dto.PlaceDto;
 import CodeIt.Ytrip.course.repository.UserCourseRepository;
@@ -62,7 +62,7 @@ public class UserService {
                 .sorted(Comparator.comparingInt(PlanDto::getDay))
                 .toList();
 
-        return CourseDto.of(userCourse.getName(),userCourse.getCreatedAt(), userCourse.getUpdatedAt(), planDto);
+        return CourseDto.of(userCourse.getId(), userCourse.getName(),userCourse.getCreatedAt(), userCourse.getUpdatedAt(), planDto);
     }
 
     private PlanDto convertToPlanDto(CourseDetail courseDetail) {
