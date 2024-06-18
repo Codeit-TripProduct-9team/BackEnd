@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class CourseService {
 
@@ -68,14 +70,14 @@ public class CourseService {
     }
 
     private String getPlaceId(PlaceDto course) {
-        float posX = course.getPosX();
-        float posY = course.getPosY();
-        Optional<Place> findPlace = placeRepository.findByPosXAndPosY(posX, posY);
+        double posX = course.getPosX();
+        double posY = course.getPosY();
+        Optional<Place> findPlace = placeRepository.findByPxAndPy(posX, posY);
         if (findPlace.isEmpty()) {
             Place place = Place.builder()
                     .name(course.getName())
-                    .posX(posX)
-                    .posY(posY)
+                    .px(posX)
+                    .py(posY)
                     .img(course.getImg())
                     .description(course.getDescription())
                     .build();
