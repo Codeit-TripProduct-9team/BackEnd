@@ -41,4 +41,9 @@ public class UserController {
         return userService.deleteUserLikeVideo(userId, videoId);
     }
 
+    @DeleteMapping("/{user_id}/course/{user_course_id}")
+    public ResponseEntity<?> deleteUserCourse(@PathVariable("user_id") Long userId, @PathVariable("user_course_id") Long userCourseId) {
+        return userService.deleteUserCourse(userCourseId);
+    }
+
 }

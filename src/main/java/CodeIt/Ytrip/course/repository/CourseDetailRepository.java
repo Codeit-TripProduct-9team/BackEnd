@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface CourseDetailRepository extends JpaRepository<CourseDetail, Long> {
 
     List<CourseDetail> findByUserCourseIdIn(List<Long> id);
-
     List<CourseDetail> findByUserCourseId(Long userCourseId);
+
+    void deleteAllByUserCourseId(Long userCourseId);
 }

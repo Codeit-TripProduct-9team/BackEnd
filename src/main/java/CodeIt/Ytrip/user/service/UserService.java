@@ -1,13 +1,14 @@
 package CodeIt.Ytrip.user.service;
 
+import CodeIt.Ytrip.common.exception.RuntimeException;
 import CodeIt.Ytrip.common.exception.UserException;
 import CodeIt.Ytrip.common.reponse.StatusCode;
 import CodeIt.Ytrip.common.reponse.SuccessResponse;
 import CodeIt.Ytrip.course.domain.CourseDetail;
 import CodeIt.Ytrip.course.domain.UserCourse;
 import CodeIt.Ytrip.course.dto.CourseDto;
-import CodeIt.Ytrip.course.dto.CourseListDto;
 import CodeIt.Ytrip.course.dto.PlanDto;
+import CodeIt.Ytrip.course.repository.CourseDetailRepository;
 import CodeIt.Ytrip.like.repository.VideoLikeRepository;
 import CodeIt.Ytrip.place.dto.PlaceDto;
 import CodeIt.Ytrip.course.repository.UserCourseRepository;
@@ -20,6 +21,7 @@ import CodeIt.Ytrip.video.dto.VideoListDto;
 import CodeIt.Ytrip.video.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,7 @@ public class UserService {
     private final PlaceRepository placeRepository;
     private final VideoRepository videoRepository;
     private final UserCourseRepository userCourseRepository;
+    private final CourseDetailRepository courseDetailRepository;
     private final VideoLikeRepository videoLikeRepository;
 
     @Transactional(readOnly = true)
@@ -90,6 +93,16 @@ public class UserService {
 
     public ResponseEntity<?> deleteUserLikeVideo(Long userId, Long videoId) {
         videoLikeRepository.deleteByUserIdAndVideoId(userId, videoId);
+        return ResponseEntity.ok(SuccessResponse.of(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage()));
+    }
+
+    public ResponseEntity<?> deleteUserCourse(Long userCourseId) {
+        try {
+            courseDetailRepository.deleteAllByUserCourseId(userCourseId);
+            userCourseRepository.deleteById(userCourseId);
+        } catch (Exception e){
+            throw new RuntimeException(StatusCode.INTERNAL_SERVER_ERROR);
+        }
         return ResponseEntity.ok(SuccessResponse.of(StatusCode.SUCCESS.getCode(), StatusCode.SUCCESS.getMessage()));
     }
 }
